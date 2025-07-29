@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= user.saccoName %> Sacco System</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .navbar-custom {
+      background-color: #2c3e50;
+    }
+    .nav-link-custom {
+      color: white !important;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-custom navbar-expand-lg navbar-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="/"><%= user.saccoName %> Sacco</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <nav class="navbar-nav ms-auto">
+          <a href="/" class="nav-link nav-link-custom">Home</a>
+          <a href="/vehicles" class="nav-link nav-link-custom">Vehicles</a>
+          <a href="/drivers" class="nav-link nav-link-custom">Drivers</a>
+          <a href="/routes" class="nav-link nav-link-custom">Routes</a>
+          <a href="/revenues" class="nav-link nav-link-custom">Revenue</a>
+          <a href="/expenses" class="nav-link nav-link-custom">Expenses</a>
+          <a href="/reports" class="nav-link nav-link-custom">Reports</a>
+          <a href="/logout" class="nav-link nav-link-custom">Logout</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+<div class="container mt-4">
+  <h2>Reports Dashboard</h2>
+  
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Revenue Reports</h5>
+          <a href="/reports/revenue" class="btn btn-light">View Reports</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Expense Reports</h5>
+          <a href="/reports/expenses" class="btn btn-light">View Reports</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Performance Reports</h5>
+          <a href="/reports/performance" class="btn btn-light">View Reports</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+      <p class="mb-0">&copy; <%= new Date().getFullYear() %> <%= user.saccoName %> Sacco System. All rights reserved.</p>
+      <p class="mb-0 small">Powered by Matatu Management System</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

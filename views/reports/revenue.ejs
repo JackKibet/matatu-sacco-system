@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= user.saccoName %> Sacco System</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .navbar-custom {
+      background-color: #2c3e50;
+    }
+    .nav-link-custom {
+      color: white !important;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-custom navbar-expand-lg navbar-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="/"><%= user.saccoName %> Sacco</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <nav class="navbar-nav ms-auto">
+          <a href="/" class="nav-link nav-link-custom">Home</a>
+          <a href="/vehicles" class="nav-link nav-link-custom">Vehicles</a>
+          <a href="/drivers" class="nav-link nav-link-custom">Drivers</a>
+          <a href="/routes" class="nav-link nav-link-custom">Routes</a>
+          <a href="/revenues" class="nav-link nav-link-custom">Revenue</a>
+          <a href="/expenses" class="nav-link nav-link-custom">Expenses</a>
+          <a href="/reports" class="nav-link nav-link-custom">Reports</a>
+          <a href="/logout" class="nav-link nav-link-custom">Logout</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid mt-4">
+    <div class="row">
+      <div class="col-md-3">
+        <!-- Filter Panel -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Report Filters</h5>
+          </div>
+          <div class="card-body">
+            <form id="reportFilters">
+              <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="startDate" class="form-control" value="<%= filters.startDate %>">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" name="endDate" class="form-control" value="<%= filters.endDate %>">
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Group By</label>
+                <select name="groupBy" class="form-select">
+                  <option value="none" <%= filters.groupBy === 'none' ? 'selected' : '' %>>No Grouping</option>
+                  <option value="route" <%= filters.groupBy === 'route' ? 'selected' : '' %>>Route</option>
+                  <option value="vehicle" <%= filters.groupBy === 'vehicle' ? 'selected' : '' %>>Vehicle</option>
+                  <option value="driver" <%= filters.groupBy === 'driver' ? 'selected' : '' %>>Driver</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-filter"></i> Apply Filters
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="card mb-4">
+          <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Quick Summary</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Total Revenue:</span>
+              <strong><%= formatCurrency(summary.totalRevenue) %></strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Total Expenses:</span>
+              <strong><%= formatCurrency(summary.totalExpenses) %></strong>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+              <span>Net Profit:</span>
+              <strong class="<%= summary.netProfit >= 0 ? 'text-success' : 'text-danger' %>">
+                <%= formatCurrency(summary.netProfit) %>
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <!-- Main Report Content -->
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Revenue Report</h4>
+            <div>
+              <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
+                <i class="bi bi-printer"></i> Print
+              </button>
+              <button class="btn btn-sm btn-outline-primary ms-2" id="exportBtn">
+                <i class="bi bi-download"></i> Export
+              </button>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <% if (revenues.length === 0) { %>
+              <div class="alert alert-warning">
+                No revenue records found for the selected period.
+              </div>
+            <% } else { %>
+              <!-- Detailed Transactions Table -->
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Route</th>
+                      <th>Vehicle</th>
+                      <th class="text-end">Revenue</th>
+                      <th class="text-end">Expenses</th>
+                      <th class="text-end">Net</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% revenues.forEach(rev => { %>
+                      <tr>
+                        <td><%= moment(rev.date).format('DD/MM/YYYY') %></td>
+                        <td>
+                          <% if (rev.route) { %>
+                            <span class="badge bg-info"><%= rev.route.name %></span>
+                            <small class="text-muted d-block"><%= rev.route.startPoint %> → <%= rev.route.endPoint %></small>
+                          <% } else { %>
+                            <span class="text-muted">Unassigned</span>
+                          <% } %>
+                        </td>
+                        <td>
+                          <% if (rev.vehicle) { %>
+                            <%= rev.vehicle.registrationNumber %>
+                            <small class="text-muted d-block"><%= rev.vehicle.make %> <%= rev.vehicle.model %></small>
+                          <% } else { %>
+                            <span class="text-muted">Unassigned</span>
+                          <% } %>
+                        </td>
+                        <td class="text-end"><%= formatCurrency(rev.amount) %></td>
+                        <td class="text-end"><%= formatCurrency(rev.expenses || 0) %></td>
+                        <td class="text-end">
+                          <span class="<%= (rev.amount - (rev.expenses || 0)) >= 0 ? 'text-success' : 'text-danger' %>">
+                            <%= formatCurrency(rev.amount - (rev.expenses || 0)) %>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="badge bg-<%= rev.status === 'verified' ? 'success' : 'warning' %>">
+                            <%= rev.status || 'pending' %>
+                          </span>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Grouped Summary (Conditional) -->
+              <% if (filters.groupBy && filters.groupBy !== 'none') { 
+                   const groupKey = 'by' + filters.groupBy.charAt(0).toUpperCase() + filters.groupBy.slice(1);
+              %>
+                <div class="mt-5">
+                  <h5>Summary by <%= filters.groupBy.charAt(0).toUpperCase() + filters.groupBy.slice(1) %></h5>
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th><%= filters.groupBy.charAt(0).toUpperCase() + filters.groupBy.slice(1) %></th>
+                          <th class="text-end">Total Revenue</th>
+                          <th class="text-end">Avg. per Trip</th>
+                          <th class="text-end">Trips</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (summary[groupKey]) {
+                             Object.entries(summary[groupKey]).forEach(([key, item]) => { %>
+                          <tr>
+                            <td><%= item.name %></td>
+                            <td class="text-end"><%= formatCurrency(item.revenue) %></td>
+                            <td class="text-end"><%= formatCurrency(item.revenue / item.count) %></td>
+                            <td class="text-end"><%= item.count %></td>
+                          </tr>
+                        <% }); 
+                           } else { %>
+                          <tr>
+                            <td colspan="4" class="text-center text-muted">No grouped summary available.</td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              <% } %>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('reportFilters').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const params = new URLSearchParams(formData).toString();
+      window.location.href = `/reports/revenue?${params}`;
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', function() {
+      const params = new URLSearchParams(window.location.search);
+      window.open(`/api/export/revenue?${params.toString()}`, '_blank');
+    });
+  </script>
+
+  <footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+      <p class="mb-0">&copy; <%= new Date().getFullYear() %> <%= user.saccoName %> Sacco System. All rights reserved.</p>
+      <p class="mb-0 small">Powered by Matatu Management System</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

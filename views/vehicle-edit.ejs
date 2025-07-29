@@ -1,0 +1,175 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Vehicle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .form-container {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .plate-preview {
+      background: #FFDE00;
+      color: #000;
+      padding: 0.5rem;
+      text-align: center;
+      font-weight: bold;
+      margin: 1rem 0;
+      border: 2px solid #000;
+      border-radius: 4px;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    
+    .btn-save {
+      background: #2c3e50;
+      color: white;
+      border: none;
+    }
+    
+    .btn-cancel {
+      background: #95a5a6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <%- header %>
+  
+  <div class="form-container">
+    <h2>Edit Vehicle Details</h2>
+    
+    <form action="/vehicles/<%= vehicle._id %>?_method=PUT" method="POST">
+      <div class="form-group">
+        <label for="registrationNumber">Registration Number</label>
+        <input 
+          type="text" 
+          id="registrationNumber" 
+          name="registrationNumber" 
+          required
+          value="<%= vehicle.registrationNumber %>"
+          pattern="[A-Z]{2,3}\s\d{3}[A-Z]?"
+          title="Kenyan format: e.g. KBC 123A"
+        >
+        <div class="plate-preview" id="platePreview">
+          <%= vehicle.registrationNumber %>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="make">Make</label>
+        <input 
+          type="text" 
+          id="make" 
+          name="make" 
+          required
+          value="<%= vehicle.make %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="model">Model</label>
+        <input 
+          type="text" 
+          id="model" 
+          name="model" 
+          required
+          value="<%= vehicle.model %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="year">Year</label>
+        <input 
+          type="number" 
+          id="year" 
+          name="year" 
+          required 
+          min="1990" 
+          max="<%= new Date().getFullYear() + 1 %>"
+          value="<%= vehicle.year %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="capacity">Passenger Capacity</label>
+        <input 
+          type="number" 
+          id="capacity" 
+          name="capacity" 
+          required 
+          min="7" 
+          max="50"
+          value="<%= vehicle.capacity %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="driver">Assigned Driver</label>
+        <select id="driver" name="driver">
+          <option value="">-- No Driver Assigned --</option>
+          <% drivers.forEach(driver => { %>
+            <option 
+              value="<%= driver._id %>"
+              <%= vehicle.driver && vehicle.driver.equals(driver._id) ? 'selected' : '' %>
+            >
+              <%= driver.name %> (<%= driver.licenseNumber %>)
+            </option>
+          <% }); %>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn btn-save">Save Changes</button>
+      <a href="/vehicles/<%= vehicle._id %>" class="btn btn-cancel">Cancel</a>
+    </form>
+  </div>
+
+  <%- footer %>
+
+  <script>
+    // Kenyan number plate preview
+    document.getElementById('registrationNumber').addEventListener('input', function(e) {
+      document.getElementById('platePreview').textContent = e.target.value.toUpperCase();
+    });
+  </script>
+</body>
+</html>

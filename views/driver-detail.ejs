@@ -1,0 +1,126 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .profile-container {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+    }
+    
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #2c3e50;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-right: 1.5rem;
+    }
+    
+    .driver-info {
+      flex: 1;
+    }
+    
+    .info-row {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      width: 150px;
+    }
+    
+    .info-value {
+      flex: 1;
+    }
+    
+    .action-buttons {
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-right: 1rem;
+    }
+    
+    .btn-edit {
+      background: #3498db;
+      color: white;
+    }
+    
+    .btn-back {
+      background: #95a5a6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <%- header %>
+  
+  <div class="profile-container">
+    <div class="profile-header">
+      <div class="avatar">
+        <%= driver.name.charAt(0).toUpperCase() %>
+      </div>
+      <div class="driver-info">
+        <h2><%= driver.name %></h2>
+        <p>Driver since: <%= new Date(driver.createdAt).toLocaleDateString() %></p>
+      </div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">License Number:</div>
+      <div class="info-value"><%= driver.licenseNumber %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">ID Number:</div>
+      <div class="info-value"><%= driver.idNumber %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">Phone:</div>
+      <div class="info-value"><%= driver.phone %></div>
+    </div>
+    
+    <div class="info-row">
+      <div class="info-label">Address:</div>
+      <div class="info-value"><%= driver.address || 'Not specified' %></div>
+    </div>
+    
+    <div class="action-buttons">
+      <a href="/drivers/<%= driver._id %>/edit" class="btn btn-edit">Edit Driver</a>
+      <a href="/drivers" class="btn btn-back">Back to Drivers</a>
+    </div>
+  </div>
+
+  <%- footer %>
+</body>
+</html>

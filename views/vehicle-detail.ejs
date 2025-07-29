@@ -1,0 +1,110 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .vehicle-card {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+    }
+    
+    .plate-display {
+      background: #FFDE00;
+      color: #000;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border: 2px solid #000;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .details-grid {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+    }
+    
+    .action-buttons {
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-right: 1rem;
+      display: inline-block;
+    }
+    
+    .btn-edit {
+      background: #3498db;
+      color: white;
+    }
+    
+    .btn-back {
+      background: #95a5a6;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <%- header %>
+  
+  <div class="vehicle-card">
+    <div class="plate-display">
+      <%= vehicle.registrationNumber %>
+    </div>
+    
+    <div class="details-grid">
+      <div class="detail-label">Make:</div>
+      <div><%= vehicle.make %></div>
+      
+      <div class="detail-label">Model:</div>
+      <div><%= vehicle.model %></div>
+      
+      <div class="detail-label">Year:</div>
+      <div><%= vehicle.year %></div>
+      
+      <div class="detail-label">Capacity:</div>
+      <div><%= vehicle.capacity %> passengers</div>
+      
+      <% if (vehicle.driver) { %>
+        <div class="detail-label">Assigned Driver:</div>
+        <div>
+          <a href="/drivers/<%= vehicle.driver._id %>">
+            <%= vehicle.driver.name %>
+          </a>
+        </div>
+      <% } %>
+    </div>
+    
+    <div class="action-buttons">
+      <a href="/vehicles/<%= vehicle._id %>/edit" class="btn btn-edit">Edit Vehicle</a>
+      <a href="/vehicles" class="btn btn-back">Back to Vehicles</a>
+    </div>
+  </div>
+
+  <%- footer %>
+</body>
+</html>

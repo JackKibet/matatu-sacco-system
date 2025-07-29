@@ -1,0 +1,154 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Driver</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .form-container {
+      background: #f9f9f9;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    
+    .btn-save {
+      background: #2c3e50;
+      color: white;
+      border: none;
+    }
+    
+    .btn-cancel {
+      background: #95a5a6;
+      color: white;
+    }
+    
+    .id-hint {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <%- header %>
+  
+  <div class="form-container">
+    <h2>Edit Driver Details</h2>
+    
+    <form action="/drivers/<%= driver._id %>?_method=PUT" method="POST">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          required
+          value="<%= driver.name %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="licenseNumber">Driving License Number</label>
+        <input 
+          type="text" 
+          id="licenseNumber" 
+          name="licenseNumber" 
+          required
+          value="<%= driver.licenseNumber %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="idNumber">National ID Number</label>
+        <input 
+          type="text" 
+          id="idNumber" 
+          name="idNumber" 
+          required
+          pattern="\d{8,12}"
+          value="<%= driver.idNumber %>"
+        >
+        <p class="id-hint">Kenyan ID (8-12 digits)</p>
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          name="phone" 
+          required
+          pattern="[+]{0,1}[0-9]{10,13}"
+          value="<%= driver.phone %>"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="address">Physical Address</label>
+        <input 
+          type="text" 
+          id="address" 
+          name="address" 
+          value="<%= driver.address || '' %>"
+        >
+      </div>
+      
+      <button type="submit" class="btn btn-save">Save Changes</button>
+      <a href="/drivers/<%= driver._id %>" class="btn btn-cancel">Cancel</a>
+    </form>
+  </div>
+
+  <%- footer %>
+
+  <script>
+    // Format phone number as user types
+    document.getElementById('phone').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.startsWith('254')) {
+        value = '+' + value;
+      } else if (value.startsWith('0')) {
+        value = '+254' + value.substring(1);
+      }
+      e.target.value = value;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Sacco - Matatu Management</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Registration-specific styles */
+    .register-container {
+      max-width: 500px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    .register-title {
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--secondary-color);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--secondary-color);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-register {
+      background-color: var(--success-color);
+      color: white;
+      padding: 0.8rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+
+    .btn-register:hover {
+      background-color: #219653;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--dark-color);
+    }
+
+    .login-link a {
+      color: var(--secondary-color);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .login-link a:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .register-container {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+      }
+      
+      .register-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Matatu Sacco System</h1>
+    <nav>
+      <a href="/login">Login</a>
+      <a href="/register" class="active">Register</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="register-container">
+      <h2 class="register-title">SACCO Registration</h2>
+      
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+      
+      <form action="/register" method="POST">
+        <div class="form-group">
+          <label for="saccoName">SACCO Name</label>
+          <input type="text" id="saccoName" name="saccoName" class="form-control" required 
+                 placeholder="Enter your SACCO name">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-control" required 
+                 placeholder="Enter your email">
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" required 
+                 placeholder="Create password (min 6 characters)" minlength="6">
+        </div>
+        
+        <button type="submit" class="btn-register">Register SACCO</button>
+      </form>
+      
+      <div class="login-link">
+        Already have an account? <a href="/login">Login here</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Matatu Sacco Management System - Faith Magoma</p>
+    <p>Supervisor: Isaac Okola</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= user.saccoName %> Sacco System</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .navbar-custom {
+      background-color: #2c3e50;
+    }
+    .nav-link-custom {
+      color: white !important;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-custom navbar-expand-lg navbar-dark mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="/"><%= user.saccoName %> Sacco</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <nav class="navbar-nav ms-auto">
+          <a href="/" class="nav-link nav-link-custom">Home</a>
+          <a href="/vehicles" class="nav-link nav-link-custom">Vehicles</a>
+          <a href="/drivers" class="nav-link nav-link-custom">Drivers</a>
+          <a href="/routes" class="nav-link nav-link-custom">Routes</a>
+          <a href="/revenues" class="nav-link nav-link-custom">Revenue</a>
+          <a href="/expenses" class="nav-link nav-link-custom">Expenses</a>
+          <a href="/reports" class="nav-link nav-link-custom">Reports</a>
+          <a href="/logout" class="nav-link nav-link-custom">Logout</a>
+        </nav>
+      </div>
+    </div>
+<div class="container mt-4">
+  <h2>Expense Report</h2>
+  
+  <!-- Filter Form -->
+  <form method="GET" class="mb-4 border p-3 rounded">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Start Date</label>
+        <input type="date" name="startDate" class="form-control" 
+               value="<%= startDate %>">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">End Date</label>
+        <input type="date" name="endDate" class="form-control" 
+               value="<%= endDate %>">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="all">All Categories</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat %>" <%= selectedCategory === cat ? 'selected' : '' %>>
+              <%= cat.charAt(0).toUpperCase() + cat.slice(1) %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="col-md-3 d-flex align-items-end gap-2">
+        <button type="submit" class="btn btn-primary">Apply</button>
+        <a href="/reports/expenses" class="btn btn-outline-secondary">Reset</a>
+      </div>
+    </div>
+  </form>
+
+  <!-- Summary Card -->
+  <div class="card mb-4 border-danger">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Total Expenses</h5>
+        <div>
+          <span class="badge bg-secondary me-2"><%= totals.count %> records</span>
+          <span class="h4 text-danger">Ksh <%= totals.amount.toLocaleString() %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expense Table -->
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Vehicle</th>
+          <th>Route</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (expenses.length > 0) { %>
+          <% expenses.forEach(exp => { %>
+          <tr>
+            <td><%= new Date(exp.date).toLocaleDateString() %></td>
+            <td>
+              <span class="badge bg-<%= 
+                exp.category === 'fuel' ? 'warning' : 
+                exp.category === 'maintenance' ? 'info' :
+                exp.category === 'salaries' ? 'success' : 'secondary'
+              %>">
+                <%= exp.category.charAt(0).toUpperCase() + exp.category.slice(1) %>
+              </span>
+            </td>
+            <td>Ksh <%= exp.amount.toLocaleString() %></td>
+            <td>
+              <% if (exp.vehicle) { %>
+                <%= exp.vehicle.registrationNumber %>
+                <% if (exp.vehicle.make) { %>
+                  <small class="text-muted">(<%= exp.vehicle.make %>)</small>
+                <% } %>
+              <% } else { %>
+                <span class="text-muted">N/A</span>
+              <% } %>
+            </td>
+            <td>
+              <% if (exp.route) { %>
+                <%= exp.route.name %>
+              <% } else { %>
+                <span class="text-muted">N/A</span>
+              <% } %>
+            </td>
+            <td><%= exp.description || '--' %></td>
+          </tr>
+          <% }); %>
+        <% } else { %>
+          <tr>
+            <td colspan="6" class="text-center py-4 text-muted">
+              No expenses found for the selected filters
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+      <p class="mb-0">&copy; <%= new Date().getFullYear() %> <%= user.saccoName %> Sacco System. All rights reserved.</p>
+      <p class="mb-0 small">Powered by Matatu Management System</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
